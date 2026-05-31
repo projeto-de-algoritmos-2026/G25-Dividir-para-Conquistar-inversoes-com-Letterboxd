@@ -18,6 +18,7 @@ from letterboxd_parser import (
     scrape_profile,
 )
 from report_generator import generate_report
+from web_app import run_web_frontend
 
 def print_header():
     """Imprime o cabeçalho estilizado no terminal."""
@@ -246,8 +247,29 @@ Exportar dados do Letterboxd:
         action='store_true',
         help='Modo terminal (equivalente a --no-report)'
     )
+    parser.add_argument(
+        '--cli',
+        action='store_true',
+        help='Abrir o modo interativo antigo no terminal'
+    )
+    parser.add_argument(
+        '--web',
+        action='store_true',
+        help='Abrir a interface web local'
+    )
+    parser.add_argument(
+        '--port',
+        type=int,
+        default=8000,
+        help='Porta inicial da interface web local'
+    )
 
     args = parser.parse_args()
+
+    if args.web or (not args.users and not args.zip and not args.cli):
+        print_header()
+        run_web_frontend(port=args.port, open_browser=not args.no_browser)
+        return
 
     print_header()
 

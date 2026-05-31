@@ -45,6 +45,14 @@ Instale as dependências necessárias:
 pip install -r requirements.txt
 ```
 
+### Abrir a interface web:
+
+```bash
+python main.py
+```
+
+Ao executar sem argumentos, o projeto inicia um servidor local e abre o frontend HTML no navegador.
+
 ### Comparar dois perfis do Letterboxd (web scraping):
 
 ```bash
@@ -60,7 +68,7 @@ python main.py --zip export_usuario1.zip export_usuario2.zip
 ### Modo interativo (guiado):
 
 ```bash
-python main.py
+python main.py --cli
 ```
 
 ### Modo terminal (sem gerar HTML):
@@ -126,6 +134,9 @@ Dois usuários avaliaram 4 filmes em comum:
 
 ```
 ├── main.py                  # Ponto de entrada — CLI e orquestração
+├── web_app.py               # Servidor local da interface web
+├── frontend/
+│   └── index.html           # Frontend HTML da aplicação
 ├── inversion_counter.py     # Algoritmo de contagem de inversões (Merge Sort)
 ├── letterboxd_parser.py     # Parser de dados do Letterboxd (ZIP + scraping)
 ├── report_generator.py      # Gerador de relatório HTML (Glassmorphism)

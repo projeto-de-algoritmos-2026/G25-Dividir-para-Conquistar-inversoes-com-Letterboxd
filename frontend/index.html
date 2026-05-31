@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letterboxd Taste Match</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #101318;
+            --panel: #181d24;
+            --panel-2: #202631;
+            --line: #303845;
+            --text: #edf2f7;
+            --muted: #9aa7b7;
+            --green: #0e9cee;
+            --blue: #2f80ed;
+            --yellow: #f6c343;
+            --red: #ef5350;
+            --orange: #ff8a3d;
+            --shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                linear-gradient(130deg, rgba(0, 200, 117, 0.08), transparent 34%),
+                linear-gradient(230deg, rgba(255, 138, 61, 0.09), transparent 38%),
+                var(--bg);
+            color: var(--text);
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        .app {
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 28px 0 48px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 22px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(1.55rem, 3vw, 2.45rem);
+            line-height: 1.05;
+        }
+
+        .subtitle {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 0.98rem;
+        }
+
+        .status-pill {
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            color: var(--muted);
+            padding: 8px 13px;
+            white-space: nowrap;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 390px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .panel,
+        .result-panel {
+            background: color-mix(in srgb, var(--panel) 92%, black);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .panel {
+            padding: 20px;
+        }
+
+        .result-panel {
+            min-height: 570px;
+            overflow: hidden;
+        }
+
+        .panel-title {
+            margin: 0 0 16px;
+            font-size: 1rem;
+            color: #d9e1ea;
+        }
+
+        .segmented {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            background: #10151c;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 5px;
+            margin-bottom: 18px;
+        }
+
+        .segment {
+            border: 0;
+            border-radius: 6px;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            min-height: 38px;
+        }
+
+        .segment.active {
+            background: var(--green);
+            color: #06120d;
+            font-weight: 800;
+        }
+
+        .field {
+            display: grid;
+            gap: 7px;
+            margin-bottom: 14px;
+        }
+
+        label {
+            color: #c7d0dc;
+            font-size: 0.86rem;
+            font-weight: 700;
+        }
+
+        input {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #11161d;
+            color: var(--text);
+            min-height: 44px;
+            padding: 10px 12px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(0, 200, 117, 0.14);
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            color: var(--muted);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .primary {
+            width: 100%;
+            min-height: 46px;
+            border: 0;
+            border-radius: 8px;
+            background: var(--green);
+            color: #06120d;
+            font-weight: 900;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+
+        .primary:disabled {
+            cursor: wait;
+            opacity: 0.7;
+        }
+
+        .error {
+            margin-top: 14px;
+            color: #ffd3d3;
+            background: rgba(239, 83, 80, 0.12);
+            border: 1px solid rgba(239, 83, 80, 0.35);
+            border-radius: 8px;
+            padding: 11px 12px;
+            font-size: 0.9rem;
+        }
+
+        .empty {
+            min-height: 570px;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            color: var(--muted);
+            padding: 28px;
+        }
+
+        .empty strong {
+            display: block;
+            color: var(--text);
+            font-size: 1.25rem;
+            margin-bottom: 8px;
+        }
+
+        .results-head {
+            display: grid;
+            grid-template-columns: minmax(220px, 1fr) 180px;
+            gap: 18px;
+            padding: 24px;
+            background: linear-gradient(135deg, rgba(0, 200, 117, 0.12), rgba(47, 128, 237, 0.08));
+            border-bottom: 1px solid var(--line);
+        }
+
+        .match-title {
+            margin: 0 0 8px;
+            font-size: clamp(1.25rem, 2.4vw, 2rem);
+        }
+
+        .users {
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .score {
+            align-self: center;
+            justify-self: end;
+            width: 148px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: conic-gradient(var(--green) var(--score), #2a313c 0);
+            position: relative;
+        }
+
+        .score::after {
+            content: "";
+            position: absolute;
+            inset: 12px;
+            border-radius: 50%;
+            background: var(--panel);
+        }
+
+        .score-value {
+            position: relative;
+            z-index: 1;
+            font-size: 2rem;
+            font-weight: 900;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-bottom: 1px solid var(--line);
+        }
+
+        .stat {
+            padding: 17px 18px;
+            border-right: 1px solid var(--line);
+        }
+
+        .stat:last-child {
+            border-right: 0;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: 1.25rem;
+            margin-bottom: 3px;
+        }
+
+        .stat span {
+            color: var(--muted);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .tables {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .table-block {
+            padding: 20px;
+        }
+
+        .table-block:first-child {
+            border-right: 1px solid var(--line);
+        }
+
+        .table-block h2 {
+            margin: 0 0 13px;
+            font-size: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            color: var(--muted);
+            font-size: 0.72rem;
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            border-bottom: 1px solid var(--line);
+            padding: 8px 6px;
+        }
+
+        td {
+            border-bottom: 1px solid rgba(48, 56, 69, 0.65);
+            padding: 9px 6px;
+            vertical-align: top;
+            font-size: 0.88rem;
+        }
+
+        .movie {
+            max-width: 210px;
+        }
+
+        .year {
+            color: var(--muted);
+            margin-left: 4px;
+        }
+
+        .number {
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        .diff {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            border-radius: 999px;
+            padding: 3px 7px;
+            background: rgba(246, 195, 67, 0.15);
+            color: #ffe29a;
+            font-weight: 800;
+        }
+
+        .perf {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 0 20px 20px;
+        }
+
+        .perf div {
+            background: var(--panel-2);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .perf span {
+            display: block;
+            color: var(--muted);
+            font-size: 0.76rem;
+            margin-bottom: 4px;
+        }
+
+        .perf strong {
+            font-size: 1rem;
+        }
+
+        @media (max-width: 920px) {
+            .workspace,
+            .results-head,
+            .tables,
+            .perf {
+                grid-template-columns: 1fr;
+            }
+
+            .score {
+                justify-self: start;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .table-block:first-child,
+            .stat {
+                border-right: 0;
+            }
+
+            .table-block:first-child,
+            .stat:nth-child(-n + 2) {
+                border-bottom: 1px solid var(--line);
+            }
+
+            header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <header>
+            <div>
+                <h1>Letterboxd Taste Match</h1>
+                <p class="subtitle">Comparador de rankings por contagem de inversoes</p>
+            </div>
+            <div class="status-pill">Servidor local</div>
+        </header>
+
+        <section class="workspace">
+            <form class="panel" id="compare-form">
+                <h2 class="panel-title">Entrada dos dados</h2>
+
+                <div class="segmented" role="tablist" aria-label="Origem dos dados">
+                    <button class="segment active" type="button" data-mode="scrape">Perfis</button>
+                    <button class="segment" type="button" data-mode="zip">ZIP</button>
+                </div>
+
+                <input type="hidden" name="mode" id="mode" value="scrape">
+
+                <div id="profile-fields">
+                    <div class="field">
+                        <label for="profile-a">Usuario 1</label>
+                        <input id="profile-a" name="user_a" autocomplete="off" placeholder="ex: davinobre">
+                    </div>
+                    <div class="field">
+                        <label for="profile-b">Usuario 2</label>
+                        <input id="profile-b" name="user_b" autocomplete="off" placeholder="ex: jevprado">
+                    </div>
+                </div>
+
+                <div id="zip-fields" class="hidden">
+                    <div class="field">
+                        <label for="zip-user-a">Nome 1</label>
+                        <input id="zip-user-a" name="zip_user_a" autocomplete="off" placeholder="Usuario 1">
+                    </div>
+                    <div class="field">
+                        <label for="zip-a">ZIP 1</label>
+                        <input id="zip-a" name="zip_a" type="file" accept=".zip">
+                    </div>
+                    <div class="field">
+                        <label for="zip-user-b">Nome 2</label>
+                        <input id="zip-user-b" name="zip_user_b" autocomplete="off" placeholder="Usuario 2">
+                    </div>
+                    <div class="field">
+                        <label for="zip-b">ZIP 2</label>
+                        <input id="zip-b" name="zip_b" type="file" accept=".zip">
+                    </div>
+                </div>
+
+                <button class="primary" id="submit" type="submit">Comparar</button>
+                <div class="error hidden" id="error"></div>
+            </form>
+
+            <section class="result-panel" id="results">
+                <div class="empty">
+                    <div>
+                        <strong>Aguardando comparacao</strong>
+                        <span>Escolha a origem dos dados e rode a analise.</span>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        const form = document.querySelector("#compare-form");
+        const modeInput = document.querySelector("#mode");
+        const profileFields = document.querySelector("#profile-fields");
+        const zipFields = document.querySelector("#zip-fields");
+        const results = document.querySelector("#results");
+        const errorBox = document.querySelector("#error");
+        const submit = document.querySelector("#submit");
+
+        document.querySelectorAll(".segment").forEach((button) => {
+            button.addEventListener("click", () => {
+                const mode = button.dataset.mode;
+                modeInput.value = mode;
+                document.querySelectorAll(".segment").forEach((item) => {
+                    item.classList.toggle("active", item === button);
+                });
+                profileFields.classList.toggle("hidden", mode !== "scrape");
+                zipFields.classList.toggle("hidden", mode !== "zip");
+                hideError();
+            });
+        });
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            hideError();
+            submit.disabled = true;
+            submit.textContent = "Comparando...";
+
+            try {
+                const body = buildBody();
+                const response = await fetch("/api/compare", {
+                    method: "POST",
+                    body,
+                });
+                const data = await response.json();
+                if (!data.ok) {
+                    throw new Error(data.error || "Erro ao comparar.");
+                }
+                renderResults(data.result);
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                submit.disabled = false;
+                submit.textContent = "Comparar";
+            }
+        });
+
+        function buildBody() {
+            const body = new FormData();
+            body.set("mode", modeInput.value);
+
+            if (modeInput.value === "zip") {
+                body.set("user_a", document.querySelector("#zip-user-a").value);
+                body.set("user_b", document.querySelector("#zip-user-b").value);
+                body.set("zip_a", document.querySelector("#zip-a").files[0] || "");
+                body.set("zip_b", document.querySelector("#zip-b").files[0] || "");
+                return body;
+            }
+
+            body.set("user_a", document.querySelector("#profile-a").value);
+            body.set("user_b", document.querySelector("#profile-b").value);
+            return body;
+        }
+
+        function renderResults(result) {
+            const stats = result.stats;
+            const score = Math.max(0, Math.min(100, stats.similarity_pct));
+            results.innerHTML = `
+                <div class="results-head">
+                    <div>
+                        <h2 class="match-title">${escapeHtml(result.message)}</h2>
+                        <div class="users">@${escapeHtml(result.users.a)} vs @${escapeHtml(result.users.b)}</div>
+                    </div>
+                    <div class="score" style="--score: ${score}%">
+                        <div class="score-value">${score}%</div>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    ${stat(stats.common_count, "Filmes em comum")}
+                    ${stat(formatNumber(stats.inversions), "Inversoes")}
+                    ${stat(formatNumber(stats.max_inversions), "Maximo")}
+                    ${stat(`${stats.ratings_a_count} / ${stats.ratings_b_count}`, "Avaliacoes")}
+                </div>
+
+                <div class="tables">
+                    ${tableBlock("Maiores concordancias", result.agreements)}
+                    ${tableBlock("Maiores discordancias", result.disagreements)}
+                </div>
+
+                <div class="perf">
+                    <div><span>Merge Sort</span><strong>${result.performance.merge_ms} ms</strong></div>
+                    <div><span>Forca bruta</span><strong>${result.performance.brute_ms} ms</strong></div>
+                    <div><span>Ganho</span><strong>${result.performance.speedup || "∞"}x</strong></div>
+                </div>
+            `;
+        }
+
+        function stat(value, label) {
+            return `<div class="stat"><strong>${value}</strong><span>${label}</span></div>`;
+        }
+
+        function tableBlock(title, rows) {
+            return `
+                <div class="table-block">
+                    <h2>${title}</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Filme</th>
+                                <th>A</th>
+                                <th>B</th>
+                                <th>Dif.</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows.map(movieRow).join("")}</tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function movieRow(row) {
+            const year = row.year ? `<span class="year">${escapeHtml(row.year)}</span>` : "";
+            return `
+                <tr>
+                    <td class="movie">${escapeHtml(row.name)}${year}</td>
+                    <td class="number">${row.rating_a.toFixed(1)}</td>
+                    <td class="number">${row.rating_b.toFixed(1)}</td>
+                    <td><span class="diff">${row.diff.toFixed(1)}</span></td>
+                </tr>
+            `;
+        }
+
+        function showError(message) {
+            errorBox.textContent = message;
+            errorBox.classList.remove("hidden");
+        }
+
+        function hideError() {
+            errorBox.textContent = "";
+            errorBox.classList.add("hidden");
+        }
+
+        function formatNumber(value) {
+            return new Intl.NumberFormat("pt-BR").format(value);
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
+        }
+    </script>
+</body>
+</html>
