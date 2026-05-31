@@ -123,26 +123,11 @@ def generate_report(user_a, user_b, ratings_a, ratings_b, result, output_path):
 
         body {{
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #0a0a1a 0%, #1a0a2e 30%, #0d1b2a 60%, #0a0a1a 100%);
+            background: #14181c;
             color: #e0e0e0;
             min-height: 100vh;
             padding: 2rem 1rem;
             overflow-x: hidden;
-        }}
-
-        body::before {{
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background:
-                radial-gradient(ellipse at 20% 50%, rgba(120, 40, 200, 0.08) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(0, 200, 150, 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 80%, rgba(255, 100, 50, 0.05) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: 0;
         }}
 
         .container {{
@@ -153,7 +138,7 @@ def generate_report(user_a, user_b, ratings_a, ratings_b, result, output_path):
         }}
 
         .glass-card {{
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(44, 52, 64, 0.5);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -173,7 +158,8 @@ def generate_report(user_a, user_b, ratings_a, ratings_b, result, output_path):
             text-align: center;
             padding: 2.5rem 2rem;
             margin-bottom: 2rem;
-            background: linear-gradient(135deg, rgba(120, 40, 200, 0.1), rgba(0, 200, 150, 0.08));
+            background: rgba(44, 52, 64, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }}
 
         .header-icon {{
@@ -190,7 +176,7 @@ def generate_report(user_a, user_b, ratings_a, ratings_b, result, output_path):
         .header h1 {{
             font-size: 2rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #c084fc, #67e8f9, #34d399);
+            background: linear-gradient(135deg, #00e676, #00b0ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -332,7 +318,7 @@ def generate_report(user_a, user_b, ratings_a, ratings_b, result, output_path):
         .stat-number {{
             font-size: 2rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #c084fc, #67e8f9);
+            background: linear-gradient(135deg, #00e676, #00b0ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -619,78 +605,6 @@ def generate_report(user_a, user_b, ratings_a, ratings_b, result, output_path):
             </table>
         </div>
 
-        <!-- Algoritmo -->
-        <div class="glass-card algo-section">
-            <div class="section-title">
-                <span class="icon">📖</span> Como Funciona o Algoritmo
-            </div>
-
-            <div class="algo-step">
-                <div class="step-num">1</div>
-                <div class="step-content">
-                    <strong>Encontrar filmes em comum:</strong> Identificamos todos os filmes que ambos os
-                    usuários avaliaram. Nesta comparação, encontramos <strong>{common_count} filmes</strong>.
-                </div>
-            </div>
-
-            <div class="algo-step">
-                <div class="step-num">2</div>
-                <div class="step-content">
-                    <strong>Criar rankings:</strong> Ordenamos os filmes em comum pela nota de cada usuário
-                    (da maior para a menor), gerando dois rankings independentes.
-                </div>
-            </div>
-
-            <div class="algo-step">
-                <div class="step-num">3</div>
-                <div class="step-content">
-                    <strong>Montar a permutação:</strong> Mapeamos a posição de cada filme no ranking do
-                    usuário B de acordo com a ordem do ranking do usuário A. Isso cria um array de posições.
-                </div>
-            </div>
-
-            <div class="algo-step">
-                <div class="step-num">4</div>
-                <div class="step-content">
-                    <strong>Contar inversões (Merge Sort):</strong> Uma <em>inversão</em> é um par (i, j) onde
-                    i &lt; j mas o elemento na posição i é maior que o da posição j. Usamos o <strong>Merge Sort
-                    modificado</strong> para contar todas as inversões em <strong>O(n log n)</strong>, em vez
-                    de O(n²) com força bruta.
-                </div>
-            </div>
-
-            <div class="algo-step">
-                <div class="step-num">5</div>
-                <div class="step-content">
-                    <strong>Calcular similaridade:</strong> O máximo de inversões possíveis é
-                    n·(n-1)/2 = <strong>{max_inversions:,}</strong>. A similaridade é:
-                    <br>
-                    <code>1 - (inversões / máximo) = 1 - ({inversions:,} / {max_inversions:,}) = <strong>{similarity_pct}%</strong></code>
-                </div>
-            </div>
-
-            <div class="complexity-box">
-                <div class="complexity-item">
-                    <div class="complexity-label">Merge Sort (usado)</div>
-                    <div class="complexity-value">O(n log n)</div>
-                </div>
-                <div class="complexity-item">
-                    <div class="complexity-label">Força Bruta</div>
-                    <div class="complexity-value">O(n²)</div>
-                </div>
-                <div class="complexity-item">
-                    <div class="complexity-label">Itens comparados</div>
-                    <div class="complexity-value">n = {common_count}</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            Gerado por Letterboxd Taste Match — Projeto de Divisão e Conquista (Contagem de Inversões)
-            <br>
-            Universidade de Brasília — G25 — 2026.1
-        </div>
     </div>
 </body>
 </html>"""

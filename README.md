@@ -37,6 +37,37 @@ Sistemas de recomendação frequentemente precisam medir quão similares são as
 
 ---
 
+## Como Executar
+
+Instale as dependências necessárias:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Comparar dois perfis do Letterboxd (web scraping):
+
+```bash
+python main.py usuario1 usuario2
+```
+
+### Comparar usando arquivos ZIP exportados:
+
+```bash
+python main.py --zip export_usuario1.zip export_usuario2.zip
+```
+
+### Modo interativo (guiado):
+
+```bash
+python main.py
+```
+
+### Modo terminal (sem gerar HTML):
+
+```bash
+python main.py --terminal usuario1 usuario2
+```
 
 ### Exportar dados do Letterboxd:
 
@@ -82,7 +113,14 @@ Dois usuários avaliaram 4 filmes em comum:
 
 **Similaridade**: 1 - (3/6) = **50%**
 
+### Complexidade
 
+| Método       | Complexidade | Descrição |
+|-------------|:------------:|-----------|
+| Merge Sort  | O(n log n)   | Conta inversões durante o processo de merge |
+| Força Bruta | O(n²)        | Compara todos os pares possíveis |
+
+---
 
 ## Estrutura do Projeto
 
