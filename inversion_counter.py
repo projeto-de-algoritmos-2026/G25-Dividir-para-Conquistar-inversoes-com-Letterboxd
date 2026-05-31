@@ -2,44 +2,64 @@
 
 def merge_count_inversions(arr):
 
-    if len(arr) <= 1:
-        return arr[:], 0
+    n = len(arr)
+    sorted_arr = list(arr)
+    temp = [None] * n
 
-    mid = len(arr) // 2
+    def sort_and_count(start, end):
+        if end - start <= 1:
+            return 0
 
-    # divisão: resolve recursivamente cada metade
-    left, left_inv = merge_count_inversions(arr[:mid])
-    right, right_inv = merge_count_inversions(arr[mid:])
+        mid = (start + end) // 2
 
-    # conquista: merge contando inversões entre as metades
-    merged = []
-    split_inv = 0
-    i = j = 0
+        # divisão: resolve recursivamente cada metade sem criar slices
+        left_inv = sort_and_count(start, mid)
+        right_inv = sort_and_count(mid, end)
 
-    while i < len(left) and j < len(right):
-        if left[i] <= right[j]:
-            merged.append(left[i])
-            i += 1
-        else:
-            # Nota para josé: todos os elementos restantes em left[i:] formam inversão
-            # com right[j], pois left é ordenado e left[i] > right[j]
-            merged.append(right[j])
-            split_inv += len(left) - i
-            j += 1
+        # conquista: merge contando inversões entre as metades
+        split_inv = 0
+        left = start
+        right = mid
+        merged = start
 
-    merged.extend(left[i:])
-    merged.extend(right[j:])
+        while left < mid and right < end:
+            if sorted_arr[left] <= sorted_arr[right]:
+                temp[merged] = sorted_arr[left]
+                left += 1
+            else:
+                # Todos os elementos restantes em sorted_arr[left:mid] formam inversão
+                # com sorted_arr[right], pois a metade esquerda está ordenada.
+                temp[merged] = sorted_arr[right]
+                split_inv += mid - left
+                right += 1
+            merged += 1
 
-    total_inversions = left_inv + right_inv + split_inv
-    return merged, total_inversions
+        while left < mid:
+            temp[merged] = sorted_arr[left]
+            left += 1
+            merged += 1
+
+        while right < end:
+            temp[merged] = sorted_arr[right]
+            right += 1
+            merged += 1
+
+        for index in range(start, end):
+            sorted_arr[index] = temp[index]
+
+        return left_inv + right_inv + split_inv
+
+    inversions = sort_and_count(0, n)
+    return sorted_arr, inversions
 
 
 def brute_force_count_inversions(arr):
     count = 0
     n = len(arr)
-    for i in range(n):
+    for i in range(n - 1):
+        current = arr[i]
         for j in range(i + 1, n):
-            if arr[i] > arr[j]:
+            if current > arr[j]:
                 count += 1
     return count
 
