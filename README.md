@@ -159,8 +159,8 @@ Dois usuários avaliaram 4 filmes em comum:
   <table>
     <tr>
       <td align="center"><img src="imgs/tela-inicial.png" alt="tela-inicial" width="500"/><br/>Tela inicial</td>
-      <td align="center"><img src="imgs/tela-inicial-zip.png" alt="Tela inicial com ZIP" width="350"/><br/>Conversor e Gerador</td>
-      <td align="center"><img src="imgs/resultado-compatibilidade.png" alt="Resultado compatibilidade" width="350"/><br/>Estoque</td>
+      <td align="center"><img src="imgs/tela-inicial-zip.png" alt="Tela inicial com ZIP" width="350"/><br/>Tela inicial com ZIP</td>
+      <td align="center"><img src="imgs/resultado-compatibilidade.png" alt="Resultado compatibilidade" width="350"/><br/>Resultado da comparação</td>
     </tr>
   </table>
 </div>
