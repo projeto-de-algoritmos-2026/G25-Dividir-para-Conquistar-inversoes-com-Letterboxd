@@ -133,26 +133,40 @@ Dois usuários avaliaram 4 filmes em comum:
 ## Estrutura do Projeto
 
 ```
-├── main.py                  # Ponto de entrada — CLI e orquestração
-├── web_app.py               # Servidor local da interface web
+.
 ├── frontend/
-│   └── index.html           # Frontend HTML da aplicação
-├── inversion_counter.py     # Algoritmo de contagem de inversões (Merge Sort)
-├── letterboxd_parser.py     # Parser de dados do Letterboxd (ZIP + scraping)
-├── report_generator.py      # Gerador de relatório HTML (Glassmorphism)
-├── requirements.txt         # Dependências Python
-├── .gitignore               # Arquivos ignorados pelo Git
-└── README.md                # Este arquivo
+│   └── index.html                 # Interface web da aplicação
+├── imgs/
+│   ├── resultado-compatibilidade.png  # Resultado da comparação
+│   ├── tela-inicial.png               # Tela inicial da interface web
+│   └── tela-inicial-zip.png           # Tela de comparação via ZIP
+├── inversion_counter.py           # Algoritmos de contagem de inversões (Merge Sort modificado e força bruta)
+├── letterboxd_parser.py           # Parser de dados do Letterboxd (ZIP e scraping)
+├── main.py                        # Ponto de entrada: CLI, modo interativo e servidor web
+├── report_generator.py            # Gerador de relatório HTML
+├── web_app.py                     # Servidor local da interface web
+├── requirements.txt               # Dependências Python
+├── LICENSE                        # Licença do projeto
+├── .gitignore                     # Arquivos ignorados pelo Git
+└── README.md                      # Documentação do projeto
 ```
 
 ---
 
 ## Screenshots (demonstração)
 
-<!-- Adicionar screenshots do terminal e do relatório HTML aqui -->
+<div align="center">
+  <table>
+    <tr>
+      <td align="center"><img src="imgs/tela-inicial.png" alt="tela-inicial" width="500"/><br/>Tela inicial</td>
+      <td align="center"><img src="imgs/tela-inicial-zip.png" alt="Tela inicial com ZIP" width="350"/><br/>Conversor e Gerador</td>
+      <td align="center"><img src="imgs/resultado-compatibilidade.png" alt="Resultado compatibilidade" width="350"/><br/>Estoque</td>
+    </tr>
+  </table>
+</div>
 
 ---
 
 ## Vídeo (demonstração)
 
-<!-- Adicionar link do vídeo de apresentação aqui -->
+[Apresentação G25  - Dividir e Conquistar PA 2026 1](https://youtu.be/2l1jH1dhteU)
