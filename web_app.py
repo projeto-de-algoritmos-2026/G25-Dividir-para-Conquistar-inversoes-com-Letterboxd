@@ -28,11 +28,11 @@ def match_message(similarity_pct):
     if similarity_pct >= 90:
         return "Praticamente a mesma pessoa", "excellent"
     if similarity_pct >= 70:
-        return "Muito compativeis", "great"
+        return "Muito compatíveis", "great"
     if similarity_pct >= 50:
         return "Gosto razoavelmente parecido", "good"
     if similarity_pct >= 30:
-        return "Opinioes bem diferentes", "warning"
+        return "Opiniões bem diferentes", "warning"
     return "Gostos completamente opostos", "danger"
 
 
